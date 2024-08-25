@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
-import "../App.css";
 import { useState } from 'react';
+import { User } from 'firebase/auth';
+import "../App.css";
 
-const Navbar = () => {
+interface NavbarProps {
+  user: User | null;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+
 
   return (
     <nav className="bg-current border-b border-gray-700">
