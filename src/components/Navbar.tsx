@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { auth } from "../firebaseConfig"; // Import Firebase auth
 
 const Navbar = ({ user }: { user: any }) => {
@@ -28,19 +28,28 @@ const Navbar = ({ user }: { user: any }) => {
         <div className="hidden lg:flex lg:items-center lg:w-auto">
           <ul className="flex flex-col lg:flex-row lg:space-x-6 text-white">
             <li className="m-3">
-              <Link to="/" className="hover:text-gray-400">Home</Link>
+              <Link to="/" className="hover:text-gray-400">
+                Home
+              </Link>
             </li>
             <li className="m-3">
-              <a href="#" className="hover:text-gray-400">Contact Us</a>
+              <a href="#" className="hover:text-gray-400">
+                Contact Us
+              </a>
             </li>
             <li className="m-3">
-              <a href="https://gfoss.eu/" className="hover:text-gray-400">About</a>
+              <a href="https://gfoss.eu/" className="hover:text-gray-400">
+                About
+              </a>
             </li>
             {user ? (
               <>
                 <li className="m-3 text-white">Welcome, {user.email}</li>
                 <li className="m-1">
-                  <button onClick={handleLogout} className="btn bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
+                  <button
+                    onClick={handleLogout}
+                    className="btn bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+                  >
                     Logout
                   </button>
                 </li>

@@ -16,7 +16,7 @@ const firebaseConfig = {
   storageBucket: "iot-physics.appspot.com",
   messagingSenderId: "117511795733",
   appId: "1:117511795733:web:5e1d9b4d2cc0be30610a1c",
-  measurementId: "G-6N1LXH2133"
+  measurementId: "G-6N1LXH2133",
 };
 
 // Initialize Firebase
