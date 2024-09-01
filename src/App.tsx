@@ -8,6 +8,7 @@ import {
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
 import Navbar from "./components/Navbar";
+import Admin from "./components/Admin";
 import Footer from "./components/Footer";
 import Crousel from "./components/Crousel";
 import Booking from "./components/Booking";
@@ -40,6 +41,9 @@ const App: React.FC = () => {
             <Switch>
               <Route path="/signin">
                 <Signin />
+              </Route>
+              <Route path="/admin">
+                <Admin />
               </Route>
               <Route path="/signup">
                 <Signup />

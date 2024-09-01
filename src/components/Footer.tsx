@@ -1,5 +1,6 @@
 import React from "react";
 import { FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -33,6 +34,11 @@ const Footer = () => {
                 >
                   GitHub
                 </a>
+              </li>
+              <li className="mb-2">
+              <Link to="/admin" className="hover:text-gray-300">
+                Admin Login
+              </Link>
               </li>
             </ul>
           </div>
