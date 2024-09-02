@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { auth } from "../firebaseConfig"; // Import Firebase auth
 
-const Navbar = ({ user }: { user: any }) => {
+const Navbar = ({ user }) => {
   const handleLogout = async () => {
     try {
       await auth.signOut();

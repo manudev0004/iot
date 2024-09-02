@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { FaUser, FaLock, FaGithub, FaGoogle } from "react-icons/fa";
 import { auth, db } from "../firebaseConfig";
 import {
@@ -9,23 +9,21 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { getDocs, query, where, collection } from "firebase/firestore";
-import { useHistory } from "react-router-dom";
 
-const SignIn: React.FC = () => {
-  const [userType, setUserType] = useState<"schoolStudent" | "teacherCollege">(
-    "teacherCollege"
-  );
+const SignIn = () => {
+  const [userType, setUserType] = useState("teacherCollege");
   const [formData, setFormData] = useState({
     usernameOrEmail: "",
     passwordOrCode: "",
   });
+  const history = useHistory();
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     if (userType === "schoolStudent") {
@@ -52,7 +50,8 @@ const SignIn: React.FC = () => {
           formData.passwordOrCode
         );
         alert("Login successful!");
-      } catch (error: any) {
+        history.push("/"); // Redirect to homepage after successful login
+      } catch (error) {
         console.error("Error signing in: ", error);
         alert("Error signing in: " + error.message);
       }
@@ -64,7 +63,8 @@ const SignIn: React.FC = () => {
           formData.passwordOrCode
         );
         alert("Login successful!");
-      } catch (error: any) {
+        history.push("/"); // Redirect to homepage after successful login
+      } catch (error) {
         console.error("Error signing in: ", error);
         alert("Error signing in: " + error.message);
       }
@@ -76,7 +76,8 @@ const SignIn: React.FC = () => {
     try {
       await signInWithPopup(auth, provider);
       alert("GitHub Login successful!");
-    } catch (error: any) {
+      history.push("/"); // Redirect to homepage after successful login
+    } catch (error) {
       console.error("Error with GitHub login: ", error);
       alert("Error with GitHub login: " + error.message);
     }
@@ -87,7 +88,8 @@ const SignIn: React.FC = () => {
     try {
       await signInWithPopup(auth, provider);
       alert("Google Login successful!");
-    } catch (error: any) {
+      history.push("/"); // Redirect to homepage after successful login
+    } catch (error) {
       console.error("Error with Google login: ", error);
       alert("Error with Google login: " + error.message);
     }

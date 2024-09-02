@@ -1,34 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import Calendar, { Value } from 'react-calendar';
+import Calendar from 'react-calendar';
 import { db } from '../firebaseConfig';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Import Firebase Auth
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import 'react-calendar/dist/Calendar.css';
 import '../App.css';
 import { useLocation } from 'react-router-dom';
 
-interface SlotData {
-  user: string;
-  date: string;
-  slot: string;
-  device: string;
-}
-
-const Booking: React.FC = () => {
+const Booking = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const device = params.get('device') || 'Unknown Device';
-  const [date, setDate] = useState<Value>(new Date());
-  const [slots, setSlots] = useState<{ [key: string]: SlotData[] }>({});
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [notification, setNotification] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<string | null>(null); // Store current user's UID
+  const [date, setDate] = useState(new Date());
+  const [slots, setSlots] = useState({});
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser(user.uid); // Set the current user's UID
+        setCurrentUser(user.uid);
       } else {
         setCurrentUser(null);
       }
@@ -38,19 +31,19 @@ const Booking: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (date && date instanceof Date) {
+    if (date instanceof Date) {
       fetchSlots(date);
     }
   }, [date]);
 
-  const fetchSlots = async (selectedDate: Date) => {
+  const fetchSlots = async (selectedDate) => {
     const dateString = selectedDate.toISOString().split('T')[0];
     const q = query(collection(db, 'slots'), where('date', '==', dateString));
     const querySnapshot = await getDocs(q);
-    const slotsData: { [key: string]: SlotData[] } = {};
+    const slotsData = {};
 
     querySnapshot.forEach((doc) => {
-      const data = doc.data() as SlotData;
+      const data = doc.data();
       if (!slotsData[dateString]) {
         slotsData[dateString] = [];
       }
@@ -60,7 +53,7 @@ const Booking: React.FC = () => {
     setSlots(slotsData);
   };
 
-  const handleDateChange = (value: Value) => {
+  const handleDateChange = (value) => {
     if (value instanceof Date) {
       setDate(value);
     } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
@@ -72,15 +65,13 @@ const Booking: React.FC = () => {
     if (!date || !(date instanceof Date) || !selectedSlot || !currentUser) return;
 
     const dateString = date.toISOString().split('T')[0];
-
-    // Check if the user has already booked 2 slots
     const userSlots = slots[dateString]?.filter(slot => slot.user === currentUser) || [];
+
     if (userSlots.length >= 2) {
-      setNotification(`You can only book 2 slots per day.`);
+      setNotification('You can only book 2 slots per day.');
       return;
     }
 
-    // Check if the selected slot is already booked
     if (slots[dateString] && slots[dateString].some(slot => slot.slot === selectedSlot)) {
       setNotification(`Slot ${selectedSlot} on ${date.toDateString()} is already booked.`);
       return;
@@ -104,7 +95,7 @@ const Booking: React.FC = () => {
     }
   };
 
-  const getTileClassName = ({ date }: { date: Date }) => {
+  const getTileClassName = ({ date }) => {
     const dateString = date.toISOString().split('T')[0];
     if (slots[dateString]) {
       return 'booked';
@@ -113,7 +104,7 @@ const Booking: React.FC = () => {
   };
 
   const generateHourlySlots = () => {
-    if (!date || !(date instanceof Date)) return [];
+    if (!(date instanceof Date)) return [];
 
     const slotsArray = [];
     for (let i = 0; i < 24; i++) {
@@ -129,7 +120,9 @@ const Booking: React.FC = () => {
 
   return (
     <div className="booking-container flex flex-col items-center">
-      <h2 className="text-center mt-4 mb-10 text-4xl hover:text-5xl text-orange-500">Book a Slot for Experiment</h2>
+      <h2 className="text-center mt-4 mb-10 text-4xl hover:text-5xl text-orange-500">
+        Book a Slot for Experiment
+      </h2>
       <div className="flex space-x-8">
         <div className="calendar-container">
           <Calendar
@@ -144,8 +137,11 @@ const Booking: React.FC = () => {
             <button
               key={slot}
               className={`p-2 border rounded-lg text-center ${
-                selectedSlot === slot ? 'bg-yellow-500 text-white ' :
-                slots[date?.toISOString().split('T')[0]]?.some((s) => s.slot === slot) ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                selectedSlot === slot
+                  ? 'bg-yellow-500 text-white'
+                  : slots[date?.toISOString().split('T')[0]]?.some((s) => s.slot === slot)
+                  ? 'bg-red-500 text-white'
+                  : 'bg-green-500 text-white'
               }`}
               onClick={() => setSelectedSlot(slot)}
             >
@@ -154,7 +150,7 @@ const Booking: React.FC = () => {
           ))}
         </div>
       </div>
-      {date && date instanceof Date && (
+      {date instanceof Date && (
         <div className="mt-6">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"

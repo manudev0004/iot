@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import {
   FaUser,
   FaEnvelope,
@@ -14,23 +14,10 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useHistory } from "react-router-dom";
 
-type FormData = {
-  username: string;
-  dob: string;
-  email: string;
-  college: string;
-  purpose: string;
-  password: string;
-  confirmPassword: string;
-};
-
-const SignUp: React.FC = () => {
-  const [studentType, setStudentType] = useState<"collegeStudent" | "teacher">(
-    "collegeStudent"
-  );
-  const [formData, setFormData] = useState<FormData>({
+const SignUp = () => {
+  const [studentType, setStudentType] = useState("collegeStudent");
+  const [formData, setFormData] = useState({
     username: "",
     dob: "",
     email: "",
@@ -40,14 +27,12 @@ const SignUp: React.FC = () => {
     confirmPassword: "",
   });
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  const validateField = (field: string, value: string) => {
+  const validateField = (field, value) => {
     if (value.trim() === "") {
       alert(`Please fill out the ${field} field.`);
       return false;
@@ -63,7 +48,7 @@ const SignUp: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const fieldsToValidate = [
@@ -109,7 +94,7 @@ const SignUp: React.FC = () => {
         alert(
           "User signed up and email sent for verification. Wait for admin approval."
         );
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error signing up: ", error);
         alert("Error signing up: " + error.message);
       }
@@ -266,6 +251,7 @@ const SignUp: React.FC = () => {
               />
             </div>
           </div>
+
           <div className="mb-4">
             <label
               htmlFor="confirmPassword"

@@ -1,17 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Slider, { Settings } from "react-slick";
+import Slider from "react-slick";
 import "../App.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-interface CarouselItem {
-  id: string;
-  name: string;
-  detail: string;
-}
-
-const data: CarouselItem[] = [
+const data = [
   {
     id: "1",
     name: "Pendulum",
@@ -39,8 +33,8 @@ const data: CarouselItem[] = [
   },
 ];
 
-const Crousel: React.FC = () => {
-  const settings: Settings = {
+const Crousel = () => {
+  const settings = {
     className: "center",
     centerMode: true,
     infinite: true,
@@ -64,32 +58,30 @@ const Crousel: React.FC = () => {
         },
       },
     ],
-    beforeChange: (current: number, next: number) => handleBeforeChange(next),
-    afterChange: (current: number) => handleAfterChange(current),
+    beforeChange: (current, next) => handleBeforeChange(next),
+    afterChange: (current) => handleAfterChange(current),
   };
 
-  const handleBeforeChange = (next: number) => {
+  const handleBeforeChange = (next) => {
     const slides = document.querySelectorAll(".slick-slide");
     slides.forEach((slide, index) => {
-      const slideElement = slide as HTMLElement;
       if (index === next + 1) {
-        slideElement.classList.add("highlighted");
+        slide.classList.add("highlighted");
       } else {
-        slideElement.classList.remove("highlighted");
+        slide.classList.remove("highlighted");
       }
     });
   };
 
-  const handleAfterChange = (current: number) => {
+  const handleAfterChange = (current) => {
     const slides = document.querySelectorAll(".slick-slide");
     slides.forEach((slide, index) => {
-      const slideElement = slide as HTMLElement;
       if (index === current + 1) {
-        slideElement.classList.add("highlighted");
-        slideElement.style.zIndex = "10";
+        slide.classList.add("highlighted");
+        slide.style.zIndex = "10";
       } else {
-        slideElement.classList.remove("highlighted");
-        slideElement.style.zIndex = "1";
+        slide.classList.remove("highlighted");
+        slide.style.zIndex = "1";
       }
     });
   };

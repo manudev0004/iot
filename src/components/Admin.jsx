@@ -4,26 +4,12 @@ import { collection, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firesto
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-interface User {
-  id: string;
-  email: string;
-  approved: boolean;
-}
-
-interface Slot {
-  id: string;
-  user: string;
-  date: string;
-  slot: string;
-  device: string;
-}
-
-const AdminPage: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [slots, setSlots] = useState<Slot[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [notification, setNotification] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+const AdminPage = () => {
+  const [users, setUsers] = useState([]);
+  const [slots, setSlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     const fetchUsersAndSlots = async () => {
@@ -31,15 +17,15 @@ const AdminPage: React.FC = () => {
       const usersSnapshot = await getDocs(collection(db, 'users'));
       const slotsSnapshot = await getDocs(collection(db, 'slots'));
 
-      const usersList: User[] = usersSnapshot.docs.map((doc) => ({
+      const usersList = usersSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })) as User[];
+      }));
 
-      const slotsList: Slot[] = slotsSnapshot.docs.map((doc) => ({
+      const slotsList = slotsSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })) as Slot[];
+      }));
 
       setUsers(usersList);
       setSlots(slotsList);
@@ -49,7 +35,7 @@ const AdminPage: React.FC = () => {
     fetchUsersAndSlots();
   }, []);
 
-  const handleApproval = async (userId: string, approve: boolean) => {
+  const handleApproval = async (userId, approve) => {
     try {
       const userRef = doc(db, 'users', userId);
       await updateDoc(userRef, { approved: approve });
@@ -64,7 +50,7 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  const handleUserRemoval = async (userId: string) => {
+  const handleUserRemoval = async (userId) => {
     if (window.confirm('Are you sure you want to remove this user?')) {
       try {
         const userRef = doc(db, 'users', userId);
