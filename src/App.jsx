@@ -42,7 +42,7 @@ const App = () => {
                 <Signin />
               </Route>
               <Route path="/admin">
-                <Admin />
+                {user ? <Admin /> : <Redirect to="/signin" />}
               </Route>
               <Route path="/signup">
                 <Signup />
